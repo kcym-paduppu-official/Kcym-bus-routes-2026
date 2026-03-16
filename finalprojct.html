@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>കെസിവൈഎം പടുപ്പ് യൂണിറ്റ് 2025-26</title>
+    <style>
+        :root {
+            --bg-color: #f4f4f9;
+            --text-color: #333;
+            --card-bg: #e3f2fd; /* Light Blue */
+            --limited-bg: #ffebee; /* Reddish for Limited Stop */
+            --header-bg: #1565c0;
+        }
+
+        .dark-mode {
+            --bg-color: #121212;
+            --text-color: #ffffff;
+            --card-bg: #1e3a5f;
+            --limited-bg: #b71c1c;
+            --header-bg: #0d47a1;
+        }
+
+        body {
+            font-family: 'Times new roman',Times,serif;
+          font-weight:bold;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            transition: 0.3s;
+        }
+
+        /* Bus Animation */
+        .bus-animation {
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .bus-emoji {
+            display: inline-block;
+            animation: moveBus 10s linear infinite;
+        }
+        @keyframes moveBus {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(100vw); }
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .dark-mode-btn {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 20px;
+            border: none;
+            background: var(--header-bg);
+            color: white;
+        }
+
+        #searchInput {
+            padding: 12px;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .filter-buttons button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background: #4caf50;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .filter-buttons button:hover {
+            opacity: 0.8;
+            transform: scale(1.05);
+        }
+
+        /* Bus List Layout */
+        .bus-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .bus-card {
+            padding: 15px;
+            border-radius: 10px;
+            background-color: var(--card-bg);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            animation: fadeIn 0.5s ease-in-out;
+            border-left: 5px solid #2196f3;
+        }
+
+        .bus-card.limited-stop {
+            background-color: var(--limited-bg);
+            border-left: 5px solid #f44336;
+            color: #b71c1c;
+        }
+        
+        .dark-mode .bus-card.limited-stop {
+            color: #ffcdd2;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bus-time { font-weight: bold; font-size: 1.2rem; }
+        .bus-name { color: var(--header-bg); font-weight: bold; }
+        .dark-mode .bus-name { color: #90caf9; }
+    </style>
+</head>
+<body>
+
+    <div class="bus-animation">
+        <span class="bus-emoji">🚌</span>
+    </div>
+
+    <header>
+        <h1>കെസിവൈഎം പടുപ്പ് യൂണിറ്റ് 2025-26</h1>
+        <h2><style>
+    .my-image {
+        width: 80%;       /* മൊബൈൽ സ്ക്രീനിന് അനുസരിച്ച് വലിപ്പം മാറാൻ */
+        max-width: 150px;  /* ചിത്രത്തിന്റെ പരമാവധി വലിപ്പം */
+        height: auto;
+        border-radius: 10px; /* വശങ്ങൾ ഉരുട്ടാൻ */
+        display: block;
+        margin: 20px auto;   /* നടുവിൽ വരാൻ */
+    }
+</style>
+
+<img src="logo.png" alt="Description" class="my-image">ബസ് സമയക്രമം</h2>
+    </header>
+
+    <div class="controls">
+        <button class="dark-mode-btn" onclick="toggleDarkMode()">Dark Mode Toggle 🌙/☀️</button>
+        
+        <input type="text" id="searchInput" placeholder="ബസ്സിന്റെ പേരോ റൂട്ടോ സെർച്ച് ചെയ്യുക..." onkeyup="filterBuses()">
+
+        <div class="filter-buttons">
+            <button onclick="filterType('all')">എല്ലാ ബസ്സുകളും</button>
+            <button onclick="filterType('kasaragod')">കാസർഗോഡ് ഭാഗത്തേക്ക്</button>
+            <button onclick="filterType('kanhangad')">കാഞ്ഞങ്ങാട് ഭാഗത്തേക്ക്</button>
+            <button onclick="filterType('long')">ദീർഘദൂര റൂട്ടുകൾ</button>
+            <button onclick="filterType('others')">മറ്റു റൂട്ടുകൾ</button>
+        </div>
+    </div>
+
+    <div class="bus-container" id="busList">
+        </div>
+
+    <script>
+        const buses = [
+            { time: "4:30 AM", name: "KSRTC", route: "ചുള്ളിക്കര - കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
+            { time: "5:15 AM", name: "KSRTC", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "5:20 AM", name: "KSRTC", route: "കുണ്ടംകുഴി- കാസർഗോഡ് - മംഗലാപുരം", dest: "kasaragod" },
+            { time: "6:10 AM", name: "KSRTC", route: "മാലക്കല്ല് - മാനന്തവാടി", dest: "long" },
+            { time: "6:15 AM", name: "KSRTC", route: "ബോവിക്കാനം -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "6:18 AM", name: "AKSHAYA", route: "ചുള്ളിക്കര - കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
+            { time: "6:30 AM", name: "SHUKRIYA", route: "ശങ്കരംപാടി - പടുപ്പ്- കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "6:40 AM", name: "AKSHAYA", route: "പൊയിനാച്ചി - കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "6:50 AM", name: "KSRTC", route: "പൊയിനാച്ചി - കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "6:50 AM", name: "AKHSAM", route: "മാലക്കല്ല് - കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
+            { time: "7:10 AM", name: "AVE MARIYA", route: "പൊയിനാച്ചി - കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "7:18 AM", name: "ST MARYS", route: "മാലക്കല്ല് - ഇരിട്ടി", dest: "long", limited: true },
+            { time: "7:20 AM", name: "HARISREE", route: "ബോവിക്കാനം -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "7:35 AM", name: "AKSHAYA", route: "പൊയിനാച്ചി - കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
+            { time: "7:45 AM", name: "SUJEETHA", route: "പൊയിനാച്ചി - കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "7:50 AM", name: "KSRTC", route: "പൊയിനാച്ചി - കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "8:00 AM", name: "SHUKRIYA", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "8:05 AM", name: "THATHWAMASI", route: "ബോവിക്കാനം -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "8:10 AM", name: "KSRTC", route: "ദേളി - കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "8:15 AM", name: "SHUKRIYA", route: "പൊയിനാച്ചി -കാസറഗോഡ്", dest: "kasaragod" },
+            { time: "8:30 AM", name: "SHUKRIYA", route: "ശങ്കരംപാടി - പടുപ്പ് - കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "8:45 AM", name: "SRIYA", route: "പൊയിനാച്ചി - കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "8:45 AM", name: "SRIYA", route: "മാലക്കല്ല് - കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
+            { time: "8:48 AM", name: "MOOKAMBIKA", route: "ബോവിക്കാനം -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "9:05 AM", name: "MOOKAMBIKA", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "9:20 AM", name: "SREE KRISHNA", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "9:30 AM", name: "AKSHAYA", route: "പൊയിനാച്ചി- കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "9:35 AM", name: "AKSHAYA", route: "ചുള്ളിക്കര -കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
+            { time: "9:55 AM", name: "VIGNESWARA", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "9:59 AM", name: "DIVYARAJ", route: "ചുള്ളിക്കര- കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
+            { time: "10:10 AM", name: "SREE KRISHNA", route: "പൊയിനാച്ചി-കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
+            { time: "10:15 AM", name: "MUNEER", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "10:15 AM", name: "ST MARYS", route: "ബോവിക്കാനം -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "10:30 AM", name: "COUSINS", route: "മാലക്കല്ല് - കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
+            { time: "10:40 AM", name: "CHIKKU", route: "പോയിനാച്ചി-പെരിയ -കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
+            { time: "10:50 AM", name: "KSRTC", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "10:55 AM", name: "AKSHAYA", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "11:10 AM", name: "HARISREE", route: "ബോവിക്കാനം -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "11:25 AM", name: "KSRTC", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "11:30 AM", name: "SHUKRIYA", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "11:45 AM", name: "AKHSAM", route: "മാലക്കല്ല് - കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
+            { time: "11:50 AM", name: "DIVYARAJ", route: "പൊയിനാച്ചി- കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
+            { time: "12:05 PM", name: "KRISHNA", route: "മൂന്നാംകടവ് - കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
+            { time: "12:05 PM", name: "BHAGAVATHI", route: "മാലക്കല്ല്- ഉദയപുരം- കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
+            { time: "12:20 PM", name: "SHUKRIYA", route: "ബോവിക്കാനം -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "12:35 PM", name: "AKSHAYA", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "12:45 PM", name: "AVE MARIYA", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "12:50 PM", name: "SHUKRIYA", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "1:10 PM", name: "SUJEETHA", route: "പൊയിനാച്ചി-കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "1:15 PM", name: "SRIYA", route: "മാലക്കല്ല് -കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
+            { time: "1:20 PM", name: "KSRTC", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "1:25 PM", name: "MANGALA", route: "ബോവിക്കാനം -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "1:35 PM", name: "AKSHAYA", route: "പൊയിനാച്ചി- കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
+            { time: "1:55 PM", name: "SHUKRIYA", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "2:15 PM", name: "ST MARYS", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "2:30 PM", name: "AKSHAYA", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "2:35 PM", name: "SRIYA", route: "പൊയിനാച്ചി-കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "2:50 PM", name: "SHUKRIYA", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "2:55 PM", name: "DIVYARAJ", route: "ചുള്ളിക്കര - കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
+            { time: "3:10 PM", name: "KSRTC", route: "സുള്ള്യ - കാഞ്ഞങ്ങാട്", dest: "kanhangad", limited: true },
+            { time: "3:15 PM", name: "MOOKAMBIKA", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "3:30 PM", name: "AKSHAYA", route: "പൊയിനാച്ചി-കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "3:35 PM", name: "MOOKAMBIKA", route: "ബോവിക്കാനം -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "3:40 PM", name: "AKSHAYA", route: "ചുള്ളിക്കര - കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
+            { time: "3:45 PM", name: "VIGNESWARA", route: "പൊയിനാച്ചി-കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "3:55 PM", name: "SREE KRISHNA", route: "പൊയിനാച്ചി-കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
+            { time: "4:05 PM", name: "AKHSAM", route: "മാലക്കല്ല് - കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
+            { time: "4:10 PM", name: "KSRTC", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "4:25 PM", name: "AKSHAYA", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "4:40 PM", name: "CHIKKU", route: "പൊയിനാച്ചി -കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
+            { time: "4:45 PM", name: "CHAITRA", route: "ബോവിക്കാനം-കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "4:45 PM", name: "SREE SHABARI", route: "മാലക്കല്ല് - കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
+            { time: "4:55 PM", name: "SREE KRISHNA", route: "പൊയിനാച്ചി-കാസർകോട്", dest: "kasaragod" },
+            { time: "5:15 PM", name: "MUNEER", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "5:10 PM", name: "ANJANEYA", route: "വെള്ളരിക്കുണ്ട് - കൊന്നക്കാട്", dest: "long" },
+            { time: "5:35 PM", name: "SHUKRIYA", route: "ബന്തടുക്ക - ശങ്കരംപാടി", dest: "others" },
+            { time: "5:45 PM", name: "DIVYARAJ", route: "പൊയിനാച്ചി -കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
+            { time: "6:05 PM", name: "SRIYA", route: "ബന്തടുക്ക - കരിവേടകം", dest: "others" },
+            { time: "6:10 PM", name: "SHUKRIYA", route: "ബന്തടുക്ക- ശങ്കരംപാടി", dest: "others" },
+            { time: "6:15 PM", name: "KSRTC", route: "അങ്കമാലി- പാലാ", dest: "long" },
+            { time: "6:15 PM", name: "KSRTC", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
+            { time: "6:30 PM", name: "AMEYAZZ", route: "ബന്തടുക്ക- പാലാ", dest: "long" },
+            { time: "7:10 PM", name: "AKSHAYA", route: "ബന്തടുക്ക - കുറ്റിക്കോൽ", dest: "others" },
+            { time: "7:25 PM", name: "SHUKRIYA", route: "ബന്തടുക്ക - കരിവേടകം", dest: "others" }
+        ];
+
+        function displayBuses(filterList) {
+            const container = document.getElementById('busList');
+            container.innerHTML = '';
+            filterList.forEach(bus => {
+                const card = document.createElement('div');
+                card.className = `bus-card ${bus.limited ? 'limited-stop' : ''}`;
+                card.innerHTML = `
+                    <div class="bus-time">${bus.time}</div>
+                    <div class="bus-name">${bus.name}</div>
+                    <div class="bus-route">${bus.route}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterBuses() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = buses.filter(bus => 
+                bus.name.toLowerCase().includes(searchTerm) || 
+                bus.route.toLowerCase().includes(searchTerm)
+            );
+            displayBuses(filtered);
+        }
+
+        function filterType(type) {
+            let filtered;
+            if (type === 'all') {
+                filtered = buses;
+            } else {
+                filtered = buses.filter(bus => bus.dest === type);
+            }
+            displayBuses(filtered);
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        // Initial Display
+        displayBuses(buses);
+    </script>
+</body>
+</html>
+
+<style>
+       /* ആനിമേഷൻ ഉള്ള ടെക്സ്റ്റ് കണ്ടെയ്നർ */
+    .journey-container {
+        width: 100%;
+        overflow: hidden;
+        background-color: #f0f8ff; /* പശ്ചാത്തല നിറം */
+        padding: 15px 0;
+        margin: 20px 0;
+    }
+
+    .moving-text {
+        font-family: 'Arial Black', sans-serif; /* Bold Font */
+        font-size: 35px;
+        font-weight: 900;
+        white-space: nowrap;
+        display: inline-block;
+        
+        /* ആകർഷകമായ ഗ്രേഡിയന്റ് കളർ */
+        background: linear-gradient(to right, #ff4b2b, #ff416c, #00509d, #ff4b2b);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        
+        /* ഇടതുവശത്തുനിന്ന് വലതുവശത്തേക്ക് നീങ്ങാനുള്ള ആനിമേഷൻ */
+        animation: moveRight 10s linear infinite, colorFlow 3s linear infinite;
+    }
+
+    /* വലത്തോട്ട് നീങ്ങുന്നതിനുള്ള ആനിമേഷൻ */
+    @keyframes moveRight {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+
+    /* ഗ്രേഡിയന്റ് നിറം മാറിക്കൊണ്ടിരിക്കാനുള്ള ആനിമേഷൻ */
+    @keyframes colorFlow {
+        to { background-position: 200% center; }
+    }
+</style>
+
+<div class="journey-container">
+    <div class="moving-text">HAVE A GOOD JOURNEY</div>
+</div>
+
+<style>
+    .instagram-section {
+        text-align: center;
+        margin: 30px 0;
+    }
+
+    .ig-button {
+        display: inline-flex;
+        align-items: center;
+        padding: 12px 25px;
+        background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        color: white;
+        text-decoration: none;
+        border-radius: 30px;
+        font-family: Arial, sans-serif;
+        font-weight: bold;
+        font-size: 16px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        transition: transform 0.3s ease;
+    }
+
+    .ig-button:hover {
+        transform: scale(1.05); /* മൗസ് വെക്കുമ്പോൾ ചെറുതായി വലുതാകും */
+    }
+
+    .ig-icon {
+        width: 24px;
+        height: 24px;
+        margin-right: 10px;
+    }
+</style>
+
+<div class="instagram-section">
+    <a href="https://www.instagram.com/kcym.paduppu.official" target="_blank" class="ig-button">
+        Follow us on Instagram
+    </a>
+</div>
+
+  <footer>
+        <p>&copy; 2025-26 KCYM PADUPPU UNIT</p>
+    </footer>
+
