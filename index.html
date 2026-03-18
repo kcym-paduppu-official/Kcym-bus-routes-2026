@@ -222,13 +222,7 @@
             </div>
         </div>
 
-        <!-- പടുപ്പ് കാലാവസ്ഥ ബോക്സ് -->
-        <div id="weather-box" style="margin-bottom: 20px; padding: 12px; background: var(--card-bg); border-radius: 15px; border: 2px solid #2196f3; text-align: center; width: 90%; max-width: 400px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-            <div style="font-size: 0.85rem; color: var(--header-bg); font-weight: bold; margin-bottom: 5px; letter-spacing: 1px;">
-                LIVE WEATHER: PADUPPU 📍
-            </div>
-            <div id="weather-info" style="font-size: 0.9rem;">കാലാവസ്ഥ പരിശോധിക്കുന്നു...</div>
-        </div>
+        
 
         <button class="dark-mode-btn" onclick="toggleDarkMode()">Dark Mode Toggle 🌙/☀️</button>
         
@@ -245,36 +239,7 @@
 
     <div class="bus-container" id="busList"></div>
 
-    <script>
-        // കാലാവസ്ഥാ വിവരങ്ങൾ ശേഖരിക്കാനുള്ള ഫങ്ക്ഷൻ
-        async function getPaduppuWeather() {
-            const apiKey = "8a6c9f72b5b71423c3c688d02fa2856c"; 
-            const lat = "12.5165";
-            const lon = "75.2595";
-            const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}&lang=ml`;
-
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                if (data.cod === 200) {
-                    const temp = Math.round(data.main.temp);
-                    const desc = data.weather[0].description;
-                    const icon = data.weather[0].icon;
-                    document.getElementById('weather-info').innerHTML = `
-                        <div style="display: flex; align-items: center; justify-content: center; gap: 5px;">
-                            <img src="wheather.png" style="width: 55px;" alt="weather icon">
-                            <span style="font-size: 2.2rem; font-weight: 800; color: var(--text-color);">${temp}°C</span>
-                        </div>
-                        <div style="text-transform: capitalize; font-size: 1.1rem; color: #ff416c; font-weight: bold;">${desc}</div>
-                    `;
-                }
-            } catch (error) {
-                document.getElementById('weather-info').innerHTML = "കാലാവസ്ഥ ലഭ്യമല്ല";
-            }
-        }
-        getPaduppuWeather();
-        setInterval(getPaduppuWeather, 1200000);
-
+    
         const buses = [
             { time: "4:30 AM", name: "KSRTC", route: "ചുള്ളിക്കര - കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
             { time: "5:15 AM", name: "KSRTC", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
