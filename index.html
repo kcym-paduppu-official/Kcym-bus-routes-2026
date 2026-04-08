@@ -416,6 +416,18 @@
             if(currentFilter === 'all') updateNextBus();
             else filterType(currentFilter);
         }, 60000);
+        function applyAutoDarkMode() {
+    const hour = new Date().getHours();
+    // വൈകുന്നേരം 6 മണി (18) മുതൽ രാവിലെ 6 മണി വരെ ഡാർക്ക് മോഡ് പ്രവർത്തിക്കും
+    if (hour >= 18 || hour < 6) {
+        document.body.classList.add('dark-mode');
+    } else {
+        document.body.classList.remove('dark-mode');
+    }
+}
+
+// പേജ് ലോഡ് ചെയ്യുമ്പോൾ ഈ ഫംഗ്ഷൻ പ്രവർത്തിപ്പിക്കുക
+applyAutoDarkMode();
     </script>
 </body>
 </html>
