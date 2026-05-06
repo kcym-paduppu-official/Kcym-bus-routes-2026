@@ -430,18 +430,7 @@ applyAutoDarkMode();
 </body>
 </html>
 
-<style>
-    .journey-container { width: 100%; overflow: hidden; background-color: #f0f8ff; padding: 15px 0; margin: 20px 0; }
-    .moving-text { font-family: 'Arial Black', sans-serif; font-size: 35px; font-weight: 900; white-space: nowrap; display: inline-block; background: linear-gradient(to right, #ff4b2b, #ff416c, #00509d, #ff4b2b); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: moveRight 10s linear infinite, colorFlow 3s linear infinite; }
-    @keyframes moveRight { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-    @keyframes colorFlow { to { background-position: 200% center; } }
-</style>
-
-<div class="journey-container">
-    <div class="moving-text">HAVE A GOOD JOURNEY</div>
-</div>
-
-<style>
+style>
     .instagram-section { text-align: center; margin: 30px 0; }
     .ig-button { display: inline-flex; align-items: center; padding: 12px 25px; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white; text-decoration: none; border-radius: 30px; font-family: Arial, sans-serif; font-weight: bold; font-size: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: transform 0.3s ease; }
     .ig-button:hover { transform: scale(1.05); }
@@ -450,6 +439,81 @@ applyAutoDarkMode();
 <div class="instagram-section">
     <a href="https://www.instagram.com/kcym.paduppu.official" target="_blank" class="ig-button">Follow us on Instagram</a>
 </div>
+
+
+<!-- ONLY ADDED: KCYM Logo Parallax + Follow Button Animation -->
+<style>
+    /* Logo parallax/floating effect - original design unchanged */
+    .my-image {
+        will-change: transform;
+        animation: kcymLogoFloat 3.5s ease-in-out infinite;
+        transition: transform 0.15s linear, filter 0.3s ease;
+    }
+
+    .my-image:hover {
+        filter: drop-shadow(0 8px 16px rgba(21,101,192,0.35));
+    }
+
+    @keyframes kcymLogoFloat {
+        0%, 100% { transform: translateY(0) scale(1); }
+        50% { transform: translateY(-10px) scale(1.03); }
+    }
+
+    /* Instagram follow button animation only */
+    .ig-button {
+        position: relative;
+        overflow: hidden;
+        animation: igPulse 2.4s ease-in-out infinite;
+    }
+
+    .ig-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -80%;
+        width: 55%;
+        height: 100%;
+        background: linear-gradient(120deg, transparent, rgba(255,255,255,0.55), transparent);
+        transform: skewX(-25deg);
+        animation: igShine 2.8s ease-in-out infinite;
+    }
+
+    .ig-button:hover {
+        transform: scale(1.08) translateY(-3px);
+        box-shadow: 0 8px 22px rgba(220,39,67,0.45);
+    }
+
+    @keyframes igPulse {
+        0%, 100% { box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        50% { box-shadow: 0 8px 25px rgba(220,39,67,0.45); }
+    }
+
+    @keyframes igShine {
+        0% { left: -80%; }
+        45% { left: 130%; }
+        100% { left: 130%; }
+    }
+
+    @media (max-width: 768px) {
+        .my-image {
+            animation: kcymLogoFloat 4s ease-in-out infinite;
+        }
+    }
+</style>
+
+<script>
+    // Logo parallax on scroll - only affects KCYM logo, not layout/design
+    window.addEventListener('scroll', function () {
+        const logo = document.querySelector('.my-image');
+        if (!logo) return;
+
+        const scrollY = window.scrollY;
+        const move = Math.min(scrollY * 0.08, 35);
+        const scale = 1 + Math.min(scrollY * 0.00025, 0.04);
+
+        logo.style.transform = `translateY(${move}px) scale(${scale})`;
+    }, { passive: true });
+</script>
 
 <footer><p>© 2025-26 KCYM PADUPPU UNIT</p></footer>
 
