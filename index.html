@@ -193,6 +193,46 @@
         .bus-time { font-weight: bold; font-size: 1.2rem; }
         .bus-name { color: var(--header-bg); font-weight: bold; }
         .dark-mode .bus-name { color: #90caf9; }
+    
+    
+    /* എക്സിക്യൂട്ടീവ് പേജിനായുള്ള പ്രത്യേക സ്റ്റൈൽ */
+#execOverlay {
+    display: none; /* ആദ്യം മറച്ചു വെക്കുന്നു */
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 10000;
+    overflow-y: auto;
+    overflow-x: hidden;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* ക്ലോസ് ബട്ടൺ സ്റ്റൈൽ */
+.close-exec-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10001;
+    padding: 10px 20px;
+    background: #ff416c;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-family: 'Times New Roman', serif;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+ 
+    
+    
     </style>
 </head>
 <body>
@@ -426,9 +466,19 @@
         document.body.classList.remove('dark-mode');
     }
 }
+    
 
 // പേജ് ലോഡ് ചെയ്യുമ്പോൾ ഈ ഫംഗ്ഷൻ പ്രവർത്തിപ്പിക്കുക
 applyAutoDarkMode();
+    function openExecutivePage() {
+    document.getElementById("execOverlay").style.display = "block";
+    document.body.style.overflow = "hidden";
+}
+
+function closeExecutivePage() {
+    document.getElementById("execOverlay").style.display = "none";
+    document.body.style.overflow = "auto";
+}
     </script>
 </body>
 </html>
@@ -516,7 +566,10 @@ applyAutoDarkMode();
 </style>
 
 <script>
+    
+    
     // Logo parallax on scroll - only affects KCYM logo, not layout/design
+    
     window.addEventListener('scroll', function () {
         const logo = document.querySelector('.my-image');
         if (!logo) return;
@@ -528,7 +581,46 @@ applyAutoDarkMode();
         logo.style.transform = `translateY(${move}px) scale(${scale})`;
     }, { passive: true });
 </script>
-
+   
+    <div style="text-align:center; margin:40px 0;">
+    <button onclick="openExecutivePage()" 
+    style="
+    padding:14px 32px;
+    border:none;
+    border-radius:40px;
+    background:linear-gradient(45deg,#ff416c,#ff4b2b,#1565c0);
+    color:white;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+    box-shadow:0 8px 25px rgba(0,0,0,0.25);
+    transition:0.3s;
+    ">
+    നിലവിലെ എക്സിക്യൂട്ടീവ് അംഗങ്ങൾ
+    </button>
+</div>
 <footer><p>© 2025-26 KCYM PADUPPU UNIT</p></footer>
+ 
+    <!-- EXECUTIVE OVERLAY START -->
 
+<div id="execOverlay">
+
+<button class="close-exec-btn" onclick="closeExecutivePage()">
+✕ Close
+</button>
+
+<iframe 
+src="executive.html"
+style="
+width:100%;
+height:100vh;
+border:none;
+background:black;
+">
+</iframe>
+
+</div>
+
+
+    <!-- EXECUTIVE OVERLAY END -->
     
