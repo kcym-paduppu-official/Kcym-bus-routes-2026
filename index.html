@@ -1231,6 +1231,22 @@ applyAutoDarkMode();
 
 </div>
 <footer><p>© 2025-26 KCYM PADUPPU UNIT</p></footer>
+<script>
+  // Disable right-click
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+  });
 
+  // Disable F12, Ctrl+U, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
+  document.addEventListener('keydown', function(e) {
+    if (
+      e.key === 'F12' ||
+      (e.ctrlKey && e.key === 'u') ||
+      (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase()))
+    ) {
+      e.preventDefault();
+    }
+  });
+</script>
 </body>
 </html>
