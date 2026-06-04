@@ -260,8 +260,25 @@
         }
 
         .bus-time { font-weight: bold; font-size: 1.2rem; }
-        .bus-name { color: var(--header-bg); font-weight: bold; }
-        .dark-mode .bus-name { color: #90caf9; }
+.bus-name { color: var(--header-bg); font-weight: bold; }
+.dark-mode .bus-name { color: #90caf9; }
+
+.no-sunday-badge {
+    display: inline-block;
+    background: #ff6b6b;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: bold;
+    padding: 2px 7px;
+    border-radius: 20px;
+    margin-left: 8px;
+    vertical-align: middle;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+.dark-mode .no-sunday-badge {
+    background: #c62828;
+}
     </style>
 </head>
 <body>
@@ -335,7 +352,7 @@
             { time: "6:25 AM", name: "SHUKRIYA", route: "ശങ്കരംപാടി - പടുപ്പ്- കാസർഗോഡ്", dest: "kasaragod" },
             { time: "6:40 AM", name: "AKSHAYA", route: "പൊയിനാച്ചി - കാസർഗോഡ്", dest: "kasaragod" },
             { time: "6:50 AM", name: "KSRTC", route: "പൊയിനാച്ചി - കാസർഗോഡ്", dest: "kasaragod" },
-            { time: "6:55 AM", name: "AKHSAM", route: "മാലക്കല്ല് - കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
+            { time: "6:55 AM", name: "AKHSAM", route: "മാലക്കല്ല് - കാഞ്ഞങ്ങാട്", dest: "kanhangad", noSunday: true},
             { time: "7:10 AM", name: "AVE MARIYA", route: "പൊയിനാച്ചി - കാസർഗോഡ്", dest: "kasaragod" },
             { time: "7:15 AM", name: "JACOBS", route: "മാലക്കല്ല് - ഇരിട്ടി", dest: "long", limited: true },
             { time: "7:20 AM", name: "HARISREE", route: "ബോവിക്കാനം -കാസർഗോഡ്", dest: "kasaragod" },
@@ -367,7 +384,7 @@
             { time: "11:10 AM", name: "HARISREE", route: "ബോവിക്കാനം -കാസർഗോഡ്", dest: "kasaragod" },
             { time: "11:25 AM", name: "KSRTC", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
             { time: "11:35 AM", name: "SHUKRIYA", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
-            { time: "11:45 AM", name: "AKHSAM", route: "മാലക്കല്ല് - കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
+            { time: "11:45 AM", name: "AKHSAM", route: "മാലക്കല്ല് - കാഞ്ഞങ്ങാട്", dest: "kanhangad", noSunday: true},
             { time: "11:50 AM", name: "DIVYARAJ", route: "പൊയിനാച്ചി- കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
             { time: "12:05 PM", name: "KRISHNA", route: "കുണ്ടംകുഴി-മൂന്നാംകടവ് - കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
             { time: "12:05 PM", name: "BHAGAVATHI", route: "മാലക്കല്ല്- ഉദയപുരം- കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
@@ -393,7 +410,7 @@
             { time: "3:40 PM", name: "AKSHAYA", route: "ചുള്ളിക്കര - കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
             { time: "3:45 PM", name: "VIGNESWARA", route: "പൊയിനാച്ചി-കാസർഗോഡ്", dest: "kasaragod" },
             { time: "4:00 PM", name: "SREE KRISHNA", route: "പൊയിനാച്ചി-കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
-            { time: "4:05 PM", name: "AKHSAM", route: "മാലക്കല്ല് - കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
+            { time: "4:05 PM", name: "AKHSAM", route: "മാലക്കല്ല് - കാഞ്ഞങ്ങാട്", dest: "kanhangad", noSunday: true},
             { time: "4:10 PM", name: "KSRTC", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
             { time: "4:25 PM", name: "AKSHAYA", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
             { time: "4:40 PM", name: "CHIKKU", route: "പൊയിനാച്ചി -കാഞ്ഞങ്ങാട്", dest: "kanhangad" },
@@ -521,10 +538,13 @@
                 const card = document.createElement('div');
                 card.className = `bus-card ${bus.limited ? 'limited-stop' : ''}`;
                 card.innerHTML = `
-                    <div class="bus-time">${bus.time}</div>
-                    <div class="bus-name">${bus.name}</div>
-                    <div class="bus-route">${bus.route}</div>
-                `;
+    <div class="bus-time">${bus.time}</div>
+    <div class="bus-name">
+        ${bus.name}
+        ${bus.noSunday ? '<span class="no-sunday-badge">🚫 No Sunday Service</span>' : ''}
+    </div>
+    <div class="bus-route">${bus.route}</div>
+`;
                 container.appendChild(card);
             });
         }
