@@ -1259,6 +1259,28 @@ applyAutoDarkMode();
       .exec-gallery-card{min-height:350px;}
       .exec-hero-content{padding:22px 10px;}
       .top-logos img{width:100px;height:100px;}
+
+      /* Give the grids more breathing room on tablets/phones by
+         trimming outer padding and shrinking the minimum column width
+         so the layout truly reflows with the device, like the main
+         bus list does, instead of staying locked to laptop sizing. */
+      .exec-gallery-section{padding:50px 12px;}
+      .executive-section{padding:50px 12px 70px;}
+      .executive-wrapper{padding:28px 15px;border-radius:22px;}
+      .exec-gallery{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;}
+      .executive-grid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;}
+    }
+
+    @media(max-width:480px){
+      .exec-gallery-section{padding:35px 10px;}
+      .executive-section{padding:35px 10px 55px;}
+      .executive-wrapper{padding:20px 12px;border-radius:18px;}
+      .exec-gallery{grid-template-columns:1fr;gap:14px;}
+      .executive-grid{grid-template-columns:1fr;gap:14px;}
+      .exec-gallery-card{min-height:280px;}
+      .member-card{padding:18px;}
+      .name{font-size:1.3rem;}
+      .position{font-size:1.05rem;}
     }
 
     /* =========================
