@@ -1092,25 +1092,13 @@
         will-change: transform;
       }
       @keyframes tickerPass {
-        0% {
-          transform: translateX(100%);
-          opacity: 0;
+        from {
+            transform: translateX(100vw);
+            }
+       to {
+        transform: translateX(-100%);
+          }
         }
-        5% {
-          opacity: 1;
-        }
-        92% {
-          transform: translateX(-100%);
-          opacity: 1;
-        }
-        97% {
-          opacity: 0;
-        }
-        100% {
-          transform: translateX(-100%);
-          opacity: 0;
-        }
-      }
       .live-ticker {
         display: flex;
         align-items: stretch;
