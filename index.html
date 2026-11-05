@@ -1526,19 +1526,21 @@
         filter: grayscale(1);
         opacity: 0.5;
       }
-      .bus-card.unavailable .bus-name,
-      .bus-card.unavailable .bus-time {
-        text-decoration: line-through;
-      }
-      .bus-card.unavailable .route-tag {
-        background: transparent;
-      }
       .bus-note {
         margin-top: 4px;
         font-family: "Manjari", sans-serif;
         font-size: 12px;
         font-weight: 700;
         color: var(--coral);
+      }
+      .bus-card.unavailable .bus-name,
+      .bus-card.unavailable .bus-time {
+        text-decoration: line-through;
+      }
+      .bus-card.unavailable .route-tag {
+        color: var(--muted);
+        border-color: var(--line);
+        background: transparent;
       }
       .empty-state {
         grid-column: 1 / -1;
@@ -3847,6 +3849,7 @@
           var delay = Math.min(index * 24, 700);
           var limitedClass = bus.limited ? " limited-stop" : "";
           var tag = bus.unavailable ? "നിലവിലില്ല" : bus.limited ? "limited" : bus.dest;
+          var pastClass = "";
           var offClass = bus.unavailable ? " unavailable" : "";
           var key = busKey(bus),
             on = favSet.has(key);
@@ -3972,7 +3975,7 @@
           var cur = state.now.getHours() * 60 + state.now.getMinutes();
           var up = list
             .filter(function (b) {
-          return !b.unavailable && parseTime(b.time) - cur > 0;
+              return !b.unavailable && parseTime(b.time) - cur > 0;
             })
             .sort(function (a, b) {
               return parseTime(a.time) - parseTime(b.time);
