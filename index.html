@@ -1519,6 +1519,27 @@
         background: color-mix(in srgb, var(--coral) 14%, transparent);
         font-weight: 700;
       }
+      .bus-card.unavailable .bus-time,
+      .bus-card.unavailable .bus-name,
+      .bus-card.unavailable .bus-route,
+      .bus-card.unavailable .route-tag {
+        filter: grayscale(1);
+        opacity: 0.5;
+      }
+      .bus-card.unavailable .bus-name,
+      .bus-card.unavailable .bus-time {
+        text-decoration: line-through;
+      }
+      .bus-card.unavailable .route-tag {
+        background: transparent;
+      }
+      .bus-note {
+        margin-top: 4px;
+        font-family: "Manjari", sans-serif;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--coral);
+      }
       .empty-state {
         grid-column: 1 / -1;
         padding: 56px 24px;
@@ -3367,7 +3388,7 @@
         { time: "6:10 PM", name: "SHUKRIYA", route: "ബന്തടുക്ക- ശങ്കരംപാടി", dest: "others" },
         { time: "6:15 PM", name: "KSRTC", route: "അങ്കമാലി- പാലാ", dest: "long" },
         { time: "6:15 PM", name: "KSRTC", route: "പൊയിനാച്ചി -കാസർഗോഡ്", dest: "kasaragod" },
-        { time: "6:30 PM", name: "AMEYAZZ", route: "ബന്തടുക്ക- പാലാ", dest: "long" },
+        { time: "6:30 PM", name: "AMEYAZZ", route: "ബന്തടുക്ക- പാലാ", dest: "long", unavailable: true },
         { time: "7:10 PM", name: "AKSHAYA", route: "ബന്തടുക്ക - കുറ്റിക്കോൽ", dest: "others" },
         { time: "7:25 PM", name: "SHUKRIYA", route: "ബന്തടുക്ക - കരിവേടകം", dest: "others" },
       ];
@@ -3711,6 +3732,7 @@
           var next = null;
           list.forEach(function (bus) {
             var delta = parseTime(bus.time) - current;
+            if (bus.unavailable) return;
             if (delta > 0 && (!next || delta < next.wait)) next = { bus: bus, wait: delta };
           });
           return next;
@@ -3824,14 +3846,15 @@
         function busCardHTML(bus, index) {
           var delay = Math.min(index * 24, 700);
           var limitedClass = bus.limited ? " limited-stop" : "";
-          var tag = bus.limited ? "limited" : bus.dest;
-          var pastClass = "";
+          var tag = bus.unavailable ? "നിലവിലില്ല" : bus.limited ? "limited" : bus.dest;
+          var offClass = bus.unavailable ? " unavailable" : "";
           var key = busKey(bus),
             on = favSet.has(key);
           return (
             '<article class="bus-card' +
             limitedClass +
             pastClass +
+            offClass +
             '" style="animation-delay:' +
             delay +
             'ms">' +
@@ -3842,7 +3865,9 @@
             bus.name +
             '</div><div class="bus-route">' +
             bus.route +
-            "</div></div>" +
+            "</div>" +
+            (bus.unavailable ? '<div class="bus-note">നിലവിൽ ഓടുന്നില്ല</div>' : "") +
+            "</div>" +
             '<span class="route-tag">' +
             tag +
             "</span>" +
@@ -3947,7 +3972,7 @@
           var cur = state.now.getHours() * 60 + state.now.getMinutes();
           var up = list
             .filter(function (b) {
-              return parseTime(b.time) - cur > 0;
+          return !b.unavailable && parseTime(b.time) - cur > 0;
             })
             .sort(function (a, b) {
               return parseTime(a.time) - parseTime(b.time);
